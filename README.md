@@ -1,1 +1,3 @@
-# CloudFormation_Examples
+# CloudFormation Examples
+
+Repository of CloudFormation examples
