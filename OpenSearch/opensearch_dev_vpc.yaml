@@ -28,7 +28,7 @@ Resources:
         Enabled: true
         InternalUserDatabaseEnabled: true
         MasterUserOptions:
-          MasterUserName: OpenSearchMasterUser
+          MasterUserName: 'OSMasterUser'
           MasterUserPassword: 'AwS#OpenSearch1'
       # Set an access policy open to any AWS resource
       AccessPolicies:
@@ -36,7 +36,10 @@ Resources:
         Statement:
           Effect: 'Allow'
           Principal:
-            AWS: *
+            AWS: '*'
           Action: 'es:*'
-          Resource: 
-            
+          Resource: '*'
+      # Define VPC options
+      VPCOptions:
+        SubnetIds: ['subnet-0e0dcd9a8ef2e0c53']
+        SecurityGroupIds: ['sg-06dcbc16fdef45b95']           

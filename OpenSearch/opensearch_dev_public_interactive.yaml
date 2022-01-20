@@ -1,0 +1,59 @@
+Description: Create a publicly accessible OpenSearch domain with an open domain access policy. It will promp the OpenSearch domain name and the username + password for the master user
+Parameters:
+  DomainNameParameter:
+    Type: String
+    Description: Name of the OpenSearch domain. Name must be unique. Not space or uppercase. The name must start with a lowercase letter and must be between 3 and 28 characters. Valid characters are a-z (lowercase only), 0-9, and - (hyphen)
+    MinLength: 3
+    MaxLength: 28
+  MasterUserNameParameter:
+    Type: String
+    Description: OpenSearch domain user name. Usernames must be between 1 and 16 characters
+    MinLength: 1
+    MaxLength: 16
+  MasterUserPasswordParameter:
+    Type: String
+    Description: OpenSearch domain password. Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character
+    MinLength: 8
+Resources:
+  CreateOpenSearch:
+    Type: AWS::OpenSearchService::Domain
+    Properties:
+      DomainName: 
+        Ref: DomainNameParameter
+      EngineVersion: 'OpenSearch_1.0'
+      # Development configuration
+      ClusterConfig:
+        DedicatedMasterEnabled: false
+        InstanceCount: '1'
+        ZoneAwarenessEnabled: false
+        InstanceType: 'r6g.large.search'
+      EBSOptions:
+        EBSEnabled: true
+        VolumeSize: '20'
+      # Node to node encrpytion must be enabled to use the advanced security options
+      NodeToNodeEncryptionOptions:
+        Enabled: true
+      # Encryption at rest must be ebabled to use the advanced security options
+      EncryptionAtRestOptions:
+        Enabled: true
+      # HTTPS must be required to use the advanced security options
+      DomainEndpointOptions:
+        EnforceHTTPS: true
+      # Create a master user with a pre-defined username and password
+      AdvancedSecurityOptions:
+        Enabled: true
+        InternalUserDatabaseEnabled: true
+        MasterUserOptions:
+          MasterUserName: 
+            Ref: MasterUserNameParameter
+          MasterUserPassword: 
+            Ref: MasterUserPasswordParameter
+      # Set an access policy open to any AWS resource
+      AccessPolicies:
+        Version: 2012-10-17
+        Statement:
+          Effect: 'Allow'
+          Principal:
+            AWS: '*'
+          Action: 'es:*'
+          Resource: '*'            
