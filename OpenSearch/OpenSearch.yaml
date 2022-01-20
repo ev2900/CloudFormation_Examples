@@ -1,0 +1,42 @@
+Description: Create a publicly accessible OpenSearch domain with an open domain access policy
+Resources:
+  CreateOpenSearch:
+    Type: AWS::OpenSearchService::Domain
+    Properties:
+      DomainName: workshop-domain
+      EngineVersion: 'OpenSearch_1.0'
+      # Development configuration
+      ClusterConfig:
+        DedicatedMasterEnabled: false
+        InstanceCount: '1'
+        ZoneAwarenessEnabled: false
+        InstanceType: 'r6g.large.search'
+      EBSOptions:
+        EBSEnabled: true
+        VolumeSize: '20'
+      # Node to node encrpytion must be enabled to use the advanced security options
+      NodeToNodeEncryptionOptions:
+        Enabled: true
+      # Encryption at rest must be ebabled to use the advanced security options
+      EncryptionAtRestOptions:
+        Enabled: true
+      # HTTPS must be required to use the advanced security options
+      DomainEndpointOptions:
+        EnforceHTTPS: true
+      # Create a master user with a pre-defined username and password
+      AdvancedSecurityOptions:
+        Enabled: true
+        InternalUserDatabaseEnabled: true
+        MasterUserOptions:
+          MasterUserName: OpenSearchMasterUser
+          MasterUserPassword: 'AwS#OpenSearch1'
+      # Set an access policy open to any AWS resource
+      AccessPolicies:
+        Version: 2012-10-17
+        Statement:
+          Effect: 'Allow'
+          Principal:
+            AWS: *
+          Action: 'es:*'
+          Resource: 
+            

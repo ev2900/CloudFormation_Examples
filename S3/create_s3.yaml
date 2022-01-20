@@ -1,0 +1,7 @@
+Description: This template will create an S3 bucket. Replace the <bucket_name> with your intended bucket name
+Resources:
+  CreateBucket:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3-bucket.html
+    Type: AWS::S3::Bucket
+    Properties:
+       BucketName: <bucket_name>

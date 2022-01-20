@@ -1,0 +1,17 @@
+Description: This template will create an S3 bucket. It will promp the user for the bucket name
+Parameters:
+  # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.htm
+  BucketNameParameter:
+    Type: String
+    Description: Name of the S3 bucket. Name must be unique. Not space or uppercase. Only lowercase letters, numbers, dots and hypens
+    MinLength: 3
+    MaxLength: 63
+    AllowedPattern: ^[a-z0-9.-]*$
+    ConstraintDescription: S3 bucket name must be 3 - 63 characters long and ONLY contain lowercase letters, numbers, dots or hypens.
+Resources:
+  CreateBucket:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3-bucket.html
+    Type: AWS::S3::Bucket
+    Properties:
+       BucketName: 
+          Ref: BucketNameParameter
