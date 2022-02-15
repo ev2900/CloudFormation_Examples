@@ -1,0 +1,10 @@
+Description: Cloud9 development enviorment
+Resources:
+  Cloud9:
+    Type: AWS::Cloud9::EnvironmentEC2
+    Properties:
+      Name: 'workshop-cloud9'
+      Description: 'Cloud9 development enviorment'
+      ImageId: 'amazonlinux-2-x86_64'
+      InstanceType: 't3.small'
+      AutomaticStopTimeMinutes: '30'
