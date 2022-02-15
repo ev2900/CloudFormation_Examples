@@ -1,0 +1,41 @@
+Description: Firehose delivery stream to OpenSearch
+Parameters:
+   DeliveryStreamNameParameter:
+      Type: String
+      Description: Name of the Kinesis Firehose
+   DomainARNParameter:
+      Type: String
+      Description: ARN of the destination OpenSearch domain
+   RoleARNParameter:
+      Type: String
+      Description: ARN of the IAM role to be assumed by Kinesis Data Firehose for calling the Amazon OpenSearch Service Configuration API, for indexing documents and sending data to S3
+   BucketParameter:
+      Type: String
+      Description: ARN of the bucket to send data to
+Resources:
+   CreateFirehose: 
+      Type: AWS::KinesisFirehose::DeliveryStream
+      Properties:
+         DeliveryStreamName:
+            Ref: DeliveryStreamNameParameter
+         DeliveryStreamType: 'DirectPut'
+         AmazonopensearchserviceDestinationConfiguration:
+            BufferingHints:
+               IntervalInSeconds: 60
+               SizeInMBs: 1
+            DomainARN: 
+               Ref: DomainARNParameter
+            IndexName: 'workshop-'
+            IndexRotationPeriod: 'OneDay'
+            RetryOptions: 300        
+            RoleARN: 
+               Ref: RoleARNParameter
+            S3BackupMode: 'FailedDocumentsOnly'
+            S3Configuration:
+               BucketARN:
+                  Ref: BucketParameter
+               BufferingHints:
+                  IntervalInSeconds: 60
+                  SizeInMBs: 1
+               RoleARN: 
+                  Ref: RoleARNParameter

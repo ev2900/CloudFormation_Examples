@@ -4,7 +4,7 @@ Resources:
     Type: AWS::OpenSearchService::Domain
     Properties:
       DomainName: workshop-domain
-      EngineVersion: 'OpenSearch_1.0'
+      EngineVersion: 'OpenSearch_1.1'
       # Development configuration
       ClusterConfig:
         DedicatedMasterEnabled: false
@@ -38,4 +38,15 @@ Resources:
           Principal:
             AWS: '*'
           Action: 'es:*'
-          Resource: '*'            
+          Resource: '*'
+# Outputs for ease of use
+Outputs:
+  OSDomainARN:
+    Description: OpenSearch domain ARN
+    Value: !GetAtt CreateOpenSearch.Arn
+  UserName:
+    Description: 'OpenSearch Dashboard Login UserName'
+    Value: 'OSMasterUser'
+  Password:
+    Description: 'OpenSearch Dashboard Login Password'
+    Value: 'AwS#OpenSearch1'           
