@@ -1,6 +1,6 @@
 Description: Create a publicly accessible OpenSearch domain with an open domain access policy
 Resources:
-  CreateOpenSearch:
+  OpenSearchDomain:
     Type: AWS::OpenSearchService::Domain
     Properties:
       DomainName: workshop-domain
@@ -43,7 +43,7 @@ Resources:
 Outputs:
   OSDomainARN:
     Description: OpenSearch domain ARN
-    Value: !GetAtt CreateOpenSearch.Arn
+    Value: !GetAtt OpenSearchDomain.Arn
   UserName:
     Description: 'OpenSearch Dashboard Login UserName'
     Value: 'OSMasterUser'

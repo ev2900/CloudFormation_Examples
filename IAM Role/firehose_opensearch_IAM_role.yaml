@@ -1,0 +1,49 @@
+Description: IAM role for Kinesis Firehose sending data to OpenSearch
+Resources:
+  IAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 'Kinesis_FireHose_OpenSearch'
+      Description: 'IAM role for Kinesis Firehose sending data to OpenSearch'
+      # Trust relationships
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - opensearch.amazonaws.com
+                - firehose.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      # Premissions
+      Policies:
+        # Firehose premissions
+        - PolicyName: firehose
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'firehose:*'
+                Resource: '*'
+        # OpenSearch premissions
+        - PolicyName: opensearch
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'es:*'
+                Resource: '*'
+        # S3
+        - PolicyName: s3
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 's3:*'
+                Resource: '*'
+# Outputs for ease of use
+Outputs:
+  RoleARN:
+    Description: IAM role ARN
+    Value: !GetAtt IAMRole.Arn

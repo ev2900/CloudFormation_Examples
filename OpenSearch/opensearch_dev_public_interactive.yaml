@@ -15,7 +15,7 @@ Parameters:
     Description: OpenSearch domain password. Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character
     MinLength: 8
 Resources:
-  CreateOpenSearch:
+  OpenSearchDomain:
     Type: AWS::OpenSearchService::Domain
     Properties:
       DomainName: 
@@ -56,4 +56,17 @@ Resources:
           Principal:
             AWS: '*'
           Action: 'es:*'
-          Resource: '*'            
+          Resource: '*'
+# Outputs for ease of use
+Outputs:
+  OSDomainARN:
+    Description: OpenSearch domain ARN
+    Value: !GetAtt OpenSearchDomain.Arn
+  UserName:
+    Description: 'OpenSearch Dashboard Login UserName'
+    Value: 
+      Ref: MasterUserNameParameter
+  Password:
+    Description: 'OpenSearch Dashboard Login Password'
+    Value:
+      Ref: MasterUserPasswordParameter

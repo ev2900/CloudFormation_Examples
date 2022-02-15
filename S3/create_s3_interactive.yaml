@@ -9,9 +9,14 @@ Parameters:
     AllowedPattern: ^[a-z0-9.-]*$
     ConstraintDescription: S3 bucket name must be 3 - 63 characters long and ONLY contain lowercase letters, numbers, dots or hypens
 Resources:
-  CreateBucket:
+  S3Bucket:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3-bucket.html
     Type: AWS::S3::Bucket
     Properties:
        BucketName: 
           Ref: BucketNameParameter
+# Outputs for ease of use
+Outputs:
+  S3BucketARN:
+    Description: S3 bucket ARN
+    Value: !GetAtt S3Bucket.Arn
