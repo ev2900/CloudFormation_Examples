@@ -6,13 +6,26 @@ Resources:
     Properties:
       GroupName: 'workshop security group'
       GroupDescription: 'workshop security group'
-      VpcId: 'vpc-0e0868fd1df4c3427'
+      VpcId: 'vpc-0731e69c847287dd4'
       # Egress rules
       SecurityGroupEgress:
         - IpProtocol: -1
           FromPort: -1 
           ToPort: -1
           CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: Name
+          Value: 'workshop security group'
+  # Add a self reference ingress rule 
+  SecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      # Ingress rules
+      GroupId: !Ref SecurityGroup
+      IpProtocol: -1
+      FromPort: -1
+      ToPort: -1
+      SourceSecurityGroupId: !GetAtt SecurityGroup.GroupId
 # Outputs for ease of use
 Outputs:
   SecurityGroupID:

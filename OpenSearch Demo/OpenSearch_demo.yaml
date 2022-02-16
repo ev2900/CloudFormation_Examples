@@ -115,24 +115,12 @@ Resources:
             RoleARN: !GetAtt IAMRole.Arn
             S3BackupMode: 'FailedDocumentsOnly'
             S3Configuration:
-               BucketARN: !GetAtt IAMRole.Arn
+               BucketARN: !GetAtt S3Bucket.Arn
                BufferingHints:
                   IntervalInSeconds: 60
                   SizeInMBs: 1
                RoleARN: !GetAtt IAMRole.Arn
-
-  # -----------------
-  # Cloud9
-  # -----------------
-  Cloud9:
-    Type: AWS::Cloud9::EnvironmentEC2
-    Properties:
-      Name: 'workshop-cloud9'
-      Description: 'Cloud9 development enviorment'
-      ImageId: 'amazonlinux-2-x86_64'
-      InstanceType: 't3.small'
-      AutomaticStopTimeMinutes: '30'
-
+               
 Outputs:
   # OpenSearch domain
   OSDomainARN:

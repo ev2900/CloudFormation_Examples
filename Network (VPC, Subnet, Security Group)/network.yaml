@@ -28,6 +28,19 @@ Resources:
           FromPort: -1 
           ToPort: -1
           CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: Name
+          Value: 'workshop security group'
+  # Add a self reference ingress rule 
+  SecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      # Ingress rules
+      GroupId: !Ref SecurityGroup
+      IpProtocol: -1
+      FromPort: -1
+      ToPort: -1
+      SourceSecurityGroupId: !GetAtt SecurityGroup.GroupId
 # Outputs for ease of use
 Outputs:
   VPCID:
