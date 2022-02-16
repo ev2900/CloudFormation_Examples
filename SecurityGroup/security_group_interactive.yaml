@@ -1,12 +1,25 @@
 Description: Create a security group allowing outbound traffic
+Parameters:
+  VpcIdParameter:
+    Type: String
+    Description: VpcId for the security group to be applied to
+  SecurityGroupNameParameter:
+    Type: String
+    Description: Security group name
+  SecurityGroupDescriptionParameter:
+    Type: String
+    Description: Security group description
 Resources:
   # Create Security Group
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: 'workshop security group'
-      GroupDescription: 'workshop security group'
-      VpcId: 'vpc-02fa8fd562f3604d0'
+      GroupName:
+        Ref: SecurityGroupNameParameter
+      GroupDescription:
+        Ref: SecurityGroupDescriptionParameter
+      VpcId: 
+        Ref: VpcIdParameter
       # Egress rules
       SecurityGroupEgress:
         - IpProtocol: -1
