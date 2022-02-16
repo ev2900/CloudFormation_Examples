@@ -1,0 +1,9 @@
+Description: Create a VPC with IPV4 address space 10.0.0.0/24
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: '10.0.0.0/24'
+      Tags:
+        - Key: Name
+          Value: workshop vpc

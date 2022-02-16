@@ -1,6 +1,6 @@
 Description: Create a publicly accessible OpenSearch domain with an open domain access policy
 Resources:
-  CreateOpenSearch:
+  OpenSearchDomain:
     Type: AWS::OpenSearchService::Domain
     Properties:
       DomainName: workshop-domain
