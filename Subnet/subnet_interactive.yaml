@@ -1,11 +1,16 @@
-Description: Create a subnet with IPV4 address space 10.0.0.0/28
+Description: Create a subnet with IPV4 address space 10.0.0.0/28. It will prompt for the VpcId 
+Parameters:
+  VpcIdParameter:
+    Type: String
+    Description: VPC ID
 Resources:
   Subnet:
     Type: AWS::EC2::Subnet
     Properties:
       CidrBlock: '10.0.0.0/28'
       AvailabilityZone: 'us-east-1a'
-      VpcId: 'vpc-0169695006c2c5c06'
+      VpcId: 
+        Ref: VpcIdParameter
       Tags:
         - Key: Name
           Value: workshop vpc | subnet a | us-east-1a

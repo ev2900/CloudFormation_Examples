@@ -9,6 +9,6 @@ Resources:
           Value: workshop vpc
 # Outputs for ease of use
 Outputs:
-  VPCId:
+  VPCID:
     Description: VPC ID
     Value: !Ref VPC   
