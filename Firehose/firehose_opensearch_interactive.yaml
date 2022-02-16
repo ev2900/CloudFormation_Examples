@@ -13,7 +13,7 @@ Parameters:
       Type: String
       Description: ARN of the bucket to send data to
 Resources:
-   CreateFirehose: 
+   Firehose:
       Type: AWS::KinesisFirehose::DeliveryStream
       Properties:
          DeliveryStreamName:
