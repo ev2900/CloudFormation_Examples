@@ -18,4 +18,4 @@ Resources:
 Outputs:
   SubnetID:
     Description: Subnet ID
-    Value: !Ref Subnet  
+    Value: !Ref Subnet

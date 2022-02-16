@@ -1,0 +1,41 @@
+Description: Create a network with a VPC, Subnet and Security Group
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: '10.0.0.0/24'
+      Tags:
+        - Key: Name
+          Value: workshop vpc
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: '10.0.0.0/28'
+      AvailabilityZone: 'us-east-1a'
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: workshop vpc | subnet a | us-east-1a
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: 'workshop security group'
+      GroupDescription: 'workshop security group'
+      VpcId: !Ref VPC
+      # Egress rules
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: -1 
+          ToPort: -1
+          CidrIp: '0.0.0.0/0'
+# Outputs for ease of use
+Outputs:
+  VPCID:
+    Description: VPC ID
+    Value: !Ref VPC
+  SubnetID:
+    Description: Subnet ID
+    Value: !Ref Subnet
+  SecurityGroupID:
+    Description: Security group ID
+    Value: !Ref SecurityGroup

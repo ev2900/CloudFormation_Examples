@@ -1,0 +1,20 @@
+Description: Create a security group allowing outbound traffic
+Resources:
+  # Create Security Group
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: 'workshop security group'
+      GroupDescription: 'workshop security group'
+      VpcId: 'vpc-0e0868fd1df4c3427'
+      # Egress rules
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: -1 
+          ToPort: -1
+          CidrIp: '0.0.0.0/0'
+# Outputs for ease of use
+Outputs:
+  SecurityGroupID:
+    Description: Security Group ID
+    Value: !Ref SecurityGroup
