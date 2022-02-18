@@ -8,4 +8,4 @@ Repository of CloudFormation examples. There are too many example to write up ea
 
 - [OpenSearch Demo/OpenSearch_demo_VPC.yaml](https://github.com/ev2900/CloudFormation_Examples/blob/main/OpenSearch%20Demo/OpenSearch_demo_VPC.yaml)
 
-<img width="700" alt="OpenSearch_demo" src="https://user-images.githubusercontent.com/5414004/154756953-e61992fa-9b94-440b-9277-0b4276da17fc.png">
+<img width="700" alt="OpenSearch_demo" src="https://user-images.githubusercontent.com/5414004/154757182-2539387e-8e26-478c-979a-4d46fd00989a.png">
