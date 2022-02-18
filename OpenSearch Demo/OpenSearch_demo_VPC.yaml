@@ -1,0 +1,329 @@
+Description: This template will an OpenSearch Demo with in a VPC with Subnets, Security Groups ...
+Resources:
+  
+  # -----------------
+  # VPC
+  # ----------------- 
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: '10.0.0.0/16'
+      Tags:
+        - Key: Name
+          Value: workshop vpc
+
+  # -----------------
+  # Subnets
+  # ----------------- 
+
+  #
+  # OS Subnet
+  #
+  OpenSearchSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: '10.0.0.0/28'
+      AvailabilityZone: 'us-east-1a'
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: opensearch-subnet | us-east-1a
+
+  #
+  # Firehose Subnet
+  #
+  FirehoseSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: '10.0.1.0/28'
+      AvailabilityZone: 'us-east-1a'
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: firehose-subnet | us-east-1a
+
+  #
+  # EC2 Subnet
+  #
+  EC2Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: '10.0.2.0/28'
+      AvailabilityZone: 'us-east-1a'
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: ec2-subnet | us-east-1a  
+
+  # -----------------
+  # Network Security Groups
+  # -----------------
+  
+  #
+  # OS Security Group
+  #   
+  OpenSearchSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: 'open search security group'
+      GroupDescription: 'open search security group'
+      VpcId: !Ref VPC
+      # Egress rules
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: -1 
+          ToPort: -1
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: Name
+          Value: 'os security group'
+  # Network Security Group + add a self reference ingress rule 
+  OpenSearchSecurityGroupIngress:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      # Ingress rules
+      GroupId: !Ref OpenSearchSecurityGroup
+      IpProtocol: -1
+      FromPort: -1
+      ToPort: -1
+      SourceSecurityGroupId: !GetAtt OpenSearchSecurityGroup.GroupId
+
+  #
+  # FireHose Security Group
+  #   
+  FirehoseSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: 'firehose security group'
+      GroupDescription: 'firehose security group'
+      VpcId: !Ref VPC
+      # Egress rules
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: -1 
+          ToPort: -1
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: Name
+          Value: 'firehose security group'
+  # Network Security Group + add a self reference ingress rule  
+  FirehoseSecurityGroupIngress:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      # Ingress rules
+      GroupId: !Ref FirehoseSecurityGroup
+      IpProtocol: -1
+      FromPort: -1
+      ToPort: -1
+      SourceSecurityGroupId: !GetAtt FirehoseSecurityGroup.GroupId
+
+  #
+  # EC2 Firehose
+  #
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: 'ec2 security group'
+      GroupDescription: 'ec2 security group'
+      VpcId: !Ref VPC
+      # Egress rules
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: -1 
+          ToPort: -1
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: Name
+          Value: 'ec2 security group'
+  # Network Security Group + add a self reference ingress rule  
+  EC2SecurityGroupGroupIngress:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      # Ingress rules
+      GroupId: !Ref EC2SecurityGroup
+      IpProtocol: -1
+      FromPort: -1
+      ToPort: -1
+      SourceSecurityGroupId: !GetAtt EC2SecurityGroup.GroupId
+
+  # -----------------
+  # OpenSearch domain
+  # -----------------
+  OpenSearchDomain:
+    Type: AWS::OpenSearchService::Domain
+    Properties:
+      DomainName: workshop-domain-vpc
+      EngineVersion: 'OpenSearch_1.1'
+      # Development configuration
+      ClusterConfig:
+        DedicatedMasterEnabled: false
+        InstanceCount: '1'
+        ZoneAwarenessEnabled: false
+        InstanceType: 'r6g.large.search'
+      EBSOptions:
+        EBSEnabled: true
+        VolumeSize: '20'
+      # Node to node encrpytion must be enabled to use the advanced security options
+      NodeToNodeEncryptionOptions:
+        Enabled: true
+      # Encryption at rest must be ebabled to use the advanced security options
+      EncryptionAtRestOptions:
+        Enabled: true
+      # HTTPS must be required to use the advanced security options
+      DomainEndpointOptions:
+        EnforceHTTPS: true
+      # Create a master user with a pre-defined username and password
+      AdvancedSecurityOptions:
+        Enabled: true
+        InternalUserDatabaseEnabled: true
+        MasterUserOptions:
+          MasterUserName: 'OSMasterUser'
+          MasterUserPassword: 'AwS#OpenSearch1'
+      # Set an access policy open to any AWS resource
+      AccessPolicies:
+        Version: 2012-10-17
+        Statement:
+          Effect: 'Allow'
+          Principal:
+            AWS: '*'
+          Action: 'es:*'
+          Resource: '*'
+      # VPC
+      VPCOptions:
+        SecurityGroupIds: 
+          - Ref: OpenSearchSecurityGroup
+        SubnetIds: 
+          - Ref: OpenSearchSubnet
+
+  # -----------------
+  # S3 bucket
+  # -----------------
+  S3Bucket:
+    Type: AWS::S3::Bucket
+
+  # -----------------
+  # IAM role
+  # -----------------
+  IAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 'Kinesis_FireHose_OpenSearch_VPC'
+      Description: 'IAM role for Kinesis Firehose sending data to OpenSearch'
+      # Trust relationships
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - opensearch.amazonaws.com
+                - firehose.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      # Premissions
+      Policies:
+        # Firehose premissions
+        - PolicyName: firehose
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'firehose:*'
+                Resource: '*'
+        # OpenSearch premissions
+        - PolicyName: opensearch
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'es:*'
+                Resource: '*'
+        # S3
+        - PolicyName: s3
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 's3:*'
+                Resource: '*'
+        # EC2 (req. for Firehose VPC)
+        - PolicyName: ec2
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: ['ec2:CreateNetworkInterface', 'ec2:CreateNetworkInterfacePermission', 'ec2:Describe*', 'ec2:DeleteNetworkInterface']
+                Resource: '*'
+
+  # -----------------
+  # Firehose
+  # -----------------
+  Firehose: 
+      Type: AWS::KinesisFirehose::DeliveryStream
+      Properties:
+         DeliveryStreamName: workshop-kfh-vpc
+         DeliveryStreamType: 'DirectPut'
+         AmazonopensearchserviceDestinationConfiguration:
+            BufferingHints:
+               IntervalInSeconds: 60
+               SizeInMBs: 1
+            DomainARN: !GetAtt OpenSearchDomain.Arn
+            IndexName: 'workshop'
+            IndexRotationPeriod: 'OneDay'        
+            RoleARN: !GetAtt IAMRole.Arn
+            S3BackupMode: 'FailedDocumentsOnly'
+            S3Configuration:
+               BucketARN: !GetAtt S3Bucket.Arn
+               BufferingHints:
+                  IntervalInSeconds: 60
+                  SizeInMBs: 1
+               RoleARN: !GetAtt IAMRole.Arn
+            VpcConfiguration:
+              RoleARN: !GetAtt IAMRole.Arn
+              SecurityGroupIds:
+                - Ref: FirehoseSecurityGroup
+              SubnetIds:
+                - Ref: FirehoseSubnet
+
+Outputs:
+  # Network
+  
+  # VPC
+  VPCID:
+    Description: VPC ID
+    Value: !Ref VPC
+  
+  # OpenSeach Network
+  OpenSearchSubnet:
+    Description: OpenSearch Subnet ID
+    Value: !Ref OpenSearchSubnet
+  OpenSearchSecurityGroup:
+    Description: OpenSearch Security Group ID
+    Value: !Ref OpenSearchSecurityGroup
+  
+  # Firehose Network
+  FirehoseSubnet:
+    Description: Firehose Subnet Id
+    Value: !Ref FirehoseSubnet
+  FirehoseSecurityGroup:
+    Description: Firehose Security Group ID
+    Value: !Ref FirehoseSecurityGroup
+
+  # EC2 Subnet
+  EC2Subnet:
+    Description: EC2 Subnet Id
+    Value: !Ref EC2Subnet
+  EC2SecurityGroup:
+    Description: EC2 Security Id
+    Value: !Ref EC2SecurityGroup
+
+  # OpenSearch domain
+  OSDomainARN:
+    Description: OpenSearch domain ARN
+    Value: !GetAtt OpenSearchDomain.Arn
+  UserName:
+    Description: 'OpenSearch Dashboard Login UserName'
+    Value: 'OSMasterUser'
+  Password:
+    Description: 'OpenSearch Dashboard Login Password'
+    Value: 'AwS#OpenSearch1'

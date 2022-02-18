@@ -3,7 +3,7 @@ Resources:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: '10.0.0.0/24'
+      CidrBlock: '10.0.0.0/16'
       Tags:
         - Key: Name
           Value: workshop vpc
@@ -33,7 +33,7 @@ Resources:
           Value: 'workshop security group'
   # Add a self reference ingress rule 
   SecurityGroupIngress:
-    Type: AWS::EC2::SecurityGroupIngress
+    Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
       # Ingress rules
       GroupId: !Ref SecurityGroup
