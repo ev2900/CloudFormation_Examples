@@ -1,5 +1,6 @@
-Description: Create a network with a VPC, Subnet and Security Group
+Description: Create a network with a VPC, Subnet, Security Group, Internet Gateway
 Resources:
+  
   VPC:
     Type: AWS::EC2::VPC
     Properties:
@@ -7,6 +8,7 @@ Resources:
       Tags:
         - Key: Name
           Value: workshop vpc
+
   Subnet:
     Type: AWS::EC2::Subnet
     Properties:
@@ -16,6 +18,7 @@ Resources:
       Tags:
         - Key: Name
           Value: workshop vpc | subnet a | us-east-1a
+  
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -41,6 +44,36 @@ Resources:
       FromPort: -1
       ToPort: -1
       SourceSecurityGroupId: !GetAtt SecurityGroup.GroupId
+  
+  VPCInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: workshop internet gateway
+  AttachInternetGatewayVPC:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      InternetGatewayId: 
+        Ref: VPCInternetGateway
+      VpcId:
+        Ref: VPC
+
+  VPCRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties: 
+      Tags: 
+        - Key: Name
+          Value: workshop route table
+      VpcId: !Ref VPC
+
+  InternetGatewayRoute:
+    Type: AWS::EC2::Route
+    Properties: 
+      RouteTableId: !Ref VPCRouteTable
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref VPCInternetGateway
+
 # Outputs for ease of use
 Outputs:
   VPCID:

@@ -1,4 +1,11 @@
-Description: This template will an OpenSearch Demo with in a VPC with Subnets, Security Groups ...
+Description: This template will an OpenSearch Demo within a VPC with Subnets, Security Groups ...
+
+Parameters:
+  # Ask the user for the name of the EC2
+  EC2KeyPairNameParameter:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: name of the key pair to ssh into the instance
+
 Resources:
   
   # -----------------
@@ -11,6 +18,24 @@ Resources:
       Tags:
         - Key: Name
           Value: workshop vpc
+
+  # -----------------
+  # Internet Gateway
+  # -----------------
+  VPCInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: workshop internet gateway
+  # Attach InternetGateway to VPC
+  AttachInternetGatewayVPC:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      InternetGatewayId: 
+        Ref: VPCInternetGateway
+      VpcId:
+        Ref: VPC
 
   # -----------------
   # Subnets
@@ -77,8 +102,8 @@ Resources:
       Tags:
         - Key: Name
           Value: 'os security group'
-  # Network Security Group + add a self reference ingress rule 
-  OpenSearchSecurityGroupIngress:
+  # add a self reference ingress rule 
+  OpenSearchSecurityGroupIngress1:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
       # Ingress rules
@@ -87,6 +112,27 @@ Resources:
       FromPort: -1
       ToPort: -1
       SourceSecurityGroupId: !GetAtt OpenSearchSecurityGroup.GroupId
+  # add a ingress rule for traffic from EC2 
+  OpenSearchSecurityGroupIngress2:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      # Ingress rules
+      GroupId: !Ref OpenSearchSecurityGroup
+      IpProtocol: -1
+      FromPort: -1
+      ToPort: -1
+      SourceSecurityGroupId: !GetAtt EC2SecurityGroup.GroupId
+  # add a ingress rule for traffic from Firehose
+  OpenSearchSecurityGroupIngress3:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      # Ingress rules
+      GroupId: !Ref OpenSearchSecurityGroup
+      IpProtocol: -1
+      FromPort: -1
+      ToPort: -1
+      SourceSecurityGroupId: !GetAtt FirehoseSecurityGroup.GroupId
+
 
   #
   # FireHose Security Group
@@ -107,7 +153,7 @@ Resources:
         - Key: Name
           Value: 'firehose security group'
   # Network Security Group + add a self reference ingress rule  
-  FirehoseSecurityGroupIngress:
+  FirehoseSecurityGroupIngress1:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
       # Ingress rules
@@ -116,9 +162,19 @@ Resources:
       FromPort: -1
       ToPort: -1
       SourceSecurityGroupId: !GetAtt FirehoseSecurityGroup.GroupId
+  # add a ingress rule for traffic from EC2  
+  FirehoseSecurityGroupIngress2:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      # Ingress rules
+      GroupId: !Ref FirehoseSecurityGroup
+      IpProtocol: -1
+      FromPort: -1
+      ToPort: -1
+      SourceSecurityGroupId: !GetAtt EC2SecurityGroup.GroupId
 
   #
-  # EC2 Firehose
+  # EC2 Security Group
   #
   EC2SecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -204,7 +260,11 @@ Resources:
   # -----------------
   # IAM role
   # -----------------
-  IAMRole:
+
+  #
+  # Firehose IAM Role
+  #
+  FirehoseIAMRole:
     Type: AWS::IAM::Role
     Properties:
       RoleName: 'Kinesis_FireHose_OpenSearch_VPC'
@@ -255,6 +315,51 @@ Resources:
                 Action: ['ec2:CreateNetworkInterface', 'ec2:CreateNetworkInterfacePermission', 'ec2:Describe*', 'ec2:DeleteNetworkInterface']
                 Resource: '*'
 
+  #
+  # EC2 IAM Role
+  #
+  EC2IAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 'Workshop_EC2'
+      Description: 'IAM role for EC2 instance'
+      # Trust relationships
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+                - firehose.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      # Premissions
+      Policies:
+        # Firehose premissions
+        - PolicyName: firehose
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'firehose:*'
+                Resource: '*'
+        # EC2 premissions
+        - PolicyName: ec2
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'ec2:*'
+                Resource: '*'
+
+  # IAM instance profile
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties: 
+      Path: /
+      Roles: [!Ref EC2IAMRole]
+
   # -----------------
   # Firehose
   # -----------------
@@ -270,60 +375,95 @@ Resources:
             DomainARN: !GetAtt OpenSearchDomain.Arn
             IndexName: 'workshop'
             IndexRotationPeriod: 'OneDay'        
-            RoleARN: !GetAtt IAMRole.Arn
+            RoleARN: !GetAtt FirehoseIAMRole.Arn
             S3BackupMode: 'FailedDocumentsOnly'
             S3Configuration:
                BucketARN: !GetAtt S3Bucket.Arn
                BufferingHints:
                   IntervalInSeconds: 60
                   SizeInMBs: 1
-               RoleARN: !GetAtt IAMRole.Arn
+               RoleARN: !GetAtt FirehoseIAMRole.Arn
             VpcConfiguration:
-              RoleARN: !GetAtt IAMRole.Arn
+              RoleARN: !GetAtt FirehoseIAMRole.Arn
               SecurityGroupIds:
                 - Ref: FirehoseSecurityGroup
               SubnetIds:
                 - Ref: FirehoseSubnet
 
-Outputs:
-  # Network
-  
-  # VPC
-  VPCID:
-    Description: VPC ID
-    Value: !Ref VPC
-  
-  # OpenSeach Network
-  OpenSearchSubnet:
-    Description: OpenSearch Subnet ID
-    Value: !Ref OpenSearchSubnet
-  OpenSearchSecurityGroup:
-    Description: OpenSearch Security Group ID
-    Value: !Ref OpenSearchSecurityGroup
-  
-  # Firehose Network
-  FirehoseSubnet:
-    Description: Firehose Subnet Id
-    Value: !Ref FirehoseSubnet
-  FirehoseSecurityGroup:
-    Description: Firehose Security Group ID
-    Value: !Ref FirehoseSecurityGroup
+  # -----------------
+  # EC2
+  # -----------------
+  EC2Server:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: 'ami-0c19f80dba70861db'
+      InstanceType: 't2.xlarge'
+      SubnetId: !Ref EC2Subnet
+      SecurityGroupIds:
+        - !Ref EC2SecurityGroup
+      KeyName: !Ref EC2KeyPairNameParameter
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      Tags:
+        - Key: Name
+          Value: workshop-ec2
 
-  # EC2 Subnet
-  EC2Subnet:
-    Description: EC2 Subnet Id
-    Value: !Ref EC2Subnet
-  EC2SecurityGroup:
-    Description: EC2 Security Id
-    Value: !Ref EC2SecurityGroup
+  # -----------------
+  # Elastic IP
+  # -----------------
+  EC2ElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref EC2Server
+
+  # -----------------
+  # Route Table
+  # -----------------
+  VPCRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties: 
+      Tags: 
+        - Key: Name
+          Value: workshop route table
+      VpcId: !Ref VPC
+  # add a route to the internet gateway
+  InternetGatewayRoute:
+    Type: AWS::EC2::Route
+    Properties: 
+      RouteTableId: !Ref VPCRouteTable
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref VPCInternetGateway
+
+  # associate route table with subnets (OpenSearchSubnet, FirehoseSubnet, EC2Subnet)
+  OpenSearchSubnetAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId: !Ref VPCRouteTable
+      SubnetId: !Ref OpenSearchSubnet
+
+  FirehoseSubnetAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref VPCRouteTable
+      SubnetId: !Ref FirehoseSubnet
+
+  EC2SubnetAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref VPCRouteTable
+      SubnetId: !Ref EC2Subnet
+
+Outputs:
 
   # OpenSearch domain
-  OSDomainARN:
-    Description: OpenSearch domain ARN
-    Value: !GetAtt OpenSearchDomain.Arn
-  UserName:
+  OSUserName:
     Description: 'OpenSearch Dashboard Login UserName'
     Value: 'OSMasterUser'
-  Password:
+  OSPassword:
     Description: 'OpenSearch Dashboard Login Password'
     Value: 'AwS#OpenSearch1'
+  OSUserName:
+    Description: 'Windows EC2 Username'
+    Value: 'Administrator'
+  EC2RDPIPAddress:
+    Description: 'IP Address to connect to EC2 via. RDP'
+    Value: !Ref EC2ElasticIP

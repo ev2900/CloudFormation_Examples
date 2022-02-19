@@ -1,0 +1,29 @@
+Description: Windows server 2019 EC2
+
+Parameters:
+  # Ask the user for the name of the EC2
+  EC2KeyPairNameParameter:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: name of the key pair to ssh into the instance
+
+Resources:
+  # EC2 Instance
+  EC2Server:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: 'ami-0c19f80dba70861db'
+      InstanceType: 't2.xlarge'
+      SubnetId: 'subnet-001a17f3ad149617b'
+      SecurityGroupIds:
+        - 'sg-0a66acaa93ba548df'
+      KeyName: !Ref EC2KeyPairNameParameter
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      Tags:
+        - Key: Name
+          Value: workshop-ec2
+
+  # Elastic IP
+  EC2ElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref EC2Server
