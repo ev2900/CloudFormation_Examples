@@ -28,5 +28,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
           
-      - name: Upload to S3
+      - name: Upload OpenSearch_demo.yaml to S3
         run: aws s3 cp /home/runner/work/CloudFormation_Examples/CloudFormation_Examples/OpenSearch\ Demo/OpenSearch_demo.yaml s3://sharkech-public/misc-public/OpenSearch_demo.yaml
+        
+      - name: Upload OpenSearch_demo_VPC.yaml to S3
+        run: aws s3 cp /home/runner/work/CloudFormation_Examples/CloudFormation_Examples/OpenSearch\ Demo/OpenSearch_demo_VPC.yaml s3://sharkech-public/misc-public/OpenSearch_demo_VPC.yaml
