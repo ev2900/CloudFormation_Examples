@@ -34,4 +34,8 @@ jobs:
         
       - name: Upload to S3
         # run: aws s3 cp ./CloudFormation_Examples/OpenSearch Demo/OpenSearch_demo.yaml s3://sharkech-public/misc-public/OpenSearch_demo.yaml
+        run: cd /home/runner/work/CloudFormation_Examples/CloudFormation_Examples/OpenSearch\ Demo
+        
+      - name: Upload to S3
+        # run: aws s3 cp ./CloudFormation_Examples/OpenSearch Demo/OpenSearch_demo.yaml s3://sharkech-public/misc-public/OpenSearch_demo.yaml
         run: ls
