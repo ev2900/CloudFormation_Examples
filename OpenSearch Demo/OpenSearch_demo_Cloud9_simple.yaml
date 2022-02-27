@@ -1,6 +1,5 @@
-Description: This template will an OpenSearch Demo
+Description: This template will an OpenSearch Demo and a Cloud9 with the https://github.com/ev2900/OpenSearch_API_Examples.git automatically cloned to it
 Resources:
-  
   # -----------------
   # OpenSearch domain
   # -----------------
