@@ -37,8 +37,11 @@ jobs:
       - name: Upload OpenSearch_cross_cluster_replication_demo.yaml to S3
         run: aws s3 cp /home/runner/work/CloudFormation_Examples/CloudFormation_Examples/OpenSearch\ Demo/OpenSearch_cross_cluster_replication_demo.yaml s3://sharkech-public/misc-public/OpenSearch_cross_cluster_replication_demo.yaml
 
-      - name: Upload OpenSearch_cross_cluster_replication_demo.yaml to S3
+      - name: Upload OpenSearch_demo_Cloud9_simple.yaml to S3
         run: aws s3 cp /home/runner/work/CloudFormation_Examples/CloudFormation_Examples/OpenSearch\ Demo/OpenSearch_demo_Cloud9_simple.yaml s3://sharkech-public/misc-public/OpenSearch_demo_Cloud9_simple.yaml
 
-      - name: Upload OpenSearch_cross_cluster_replication_demo.yaml to S3
+      - name: Upload cloud9_w_OpenSearch_API_repo.yml to S3
         run: aws s3 cp /home/runner/work/CloudFormation_Examples/CloudFormation_Examples/Cloud9/cloud9_w_OpenSearch_API_repo.yml s3://sharkech-public/misc-public/cloud9_w_OpenSearch_API_repo.yml
+        
+      - name: Upload KDA_studio_kinesis_demo.yaml to S3
+        run: aws s3 cp /home/runner/work/CloudFormation_Examples/CloudFormation_Examples/KDA\ Studio\ Demo/KDA_studio_kinesis_demo.yaml s3://sharkech-public/misc-public/KDA_studio_kinesis_demo.yaml
