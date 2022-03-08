@@ -20,3 +20,7 @@ Repository of CloudFormation examples. There are too many example to write up ea
 [![Launch CloudFormation Stack](https://sharkech-public.s3.amazonaws.com/misc-public/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=open-search-cross-cluster-replication&templateURL=https://sharkech-public.s3.amazonaws.com/misc-public/OpenSearch_cross_cluster_replication_demo.yaml)
 
 <img width="700" alt="OpenSearch_demo_VPC_Architecture" src="https://github.com/ev2900/CloudFormation_Examples/blob/main/Architecture%20Diagrams%20for%20README/OpenSearch_cross_cluster_replication_demo_yaml.png">
+
+- [OpenSearch Demo/OpenSearch_demo_Cloud9_simple.yaml](https://github.com/ev2900/CloudFormation_Examples/blob/main/OpenSearch%20Demo/OpenSearch_demo_Cloud9_simple.yaml)
+
+[![Launch CloudFormation Stack](https://sharkech-public.s3.amazonaws.com/misc-public/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=open-search-demo-cloud9-simple&templateURL=https://sharkech-public.s3.amazonaws.com/misc-public/OpenSearch_demo_Cloud9_simple.yaml)
