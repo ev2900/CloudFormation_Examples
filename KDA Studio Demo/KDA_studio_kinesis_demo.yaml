@@ -1,0 +1,116 @@
+Description: This template will create the resourses required for a KDA studio demo
+Resources:
+
+  # -----------------
+  # S3 bucket
+  # -----------------
+  S3Bucket:
+    Type: AWS::S3::Bucket
+  
+  # -----------------
+  # Kinesis data stream
+  # -----------------
+  KinesisDataStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      Name: yellow-cab-trip
+      RetentionPeriodHours: 72
+      ShardCount: 1
+
+  # -----------------
+  # Glue data catalog database
+  # -----------------
+  GlueDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput:
+        Name: kda-workshop-db
+        Description: Glue database for KDA studio
+
+  # -----------------
+  # IAM role
+  # -----------------
+  IAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 
+                - 'kinesisanalytics.amazonaws.com'
+                - 'glue.amazonaws.com'
+                - 'kinesis.amazonaws.com'
+            Action: 'sts:AssumeRole'
+      Policies:
+        # Glue premissions
+        - PolicyName: glue
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: 'glue:*'
+                Resource: '*'
+        # Kinesis premissions
+        - PolicyName: kinesis
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'kinesis:*'
+                Resource: '*'
+        # S3 premissions
+        - PolicyName: s3
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 's3:*'
+                Resource: '*'
+             
+  # -----------------
+  # Kinesis data analytics studio
+  # -----------------
+  KDAStudio:
+    Type: AWS::KinesisAnalyticsV2::Application
+    Properties:
+      ApplicationName: kda-workshop-studio-notebook
+      ApplicationMode: INTERACTIVE
+      RuntimeEnvironment: ZEPPELIN-FLINK-2_0
+      ServiceExecutionRole: !GetAtt IAMRole.Arn
+      # Scale
+      ApplicationConfiguration:
+        FlinkApplicationConfiguration:
+          ParallelismConfiguration:
+            Parallelism: 4
+            ConfigurationType: CUSTOM 
+        # Zeppelin
+        ZeppelinApplicationConfiguration:
+          # Glue data catalog
+          CatalogConfiguration:
+            GlueDataCatalogConfiguration:
+              DatabaseARN: !Sub "arn:aws:glue:${AWS::Region}:${AWS::AccountId}:database/${GlueDatabase}"
+          # S3 deploy as
+          DeployAsApplicationConfiguration:
+            S3ContentLocation:
+              BasePath: 'kda-workshop-studio-notebook-builds/' 
+              BucketARN: !GetAtt S3Bucket.Arn
+          # Dependency JARs
+          CustomArtifactsConfiguration:
+            - ArtifactType: DEPENDENCY_JAR
+              MavenReference:
+                GroupId: org.apache.flink
+                ArtifactId: flink-sql-connector-kinesis_2.12
+                Version: 1.13.2
+            - ArtifactType: DEPENDENCY_JAR
+              MavenReference:
+                GroupId: software.amazon.msk
+                ArtifactId: aws-msk-iam-auth
+                Version: 1.1.0
+            - ArtifactType: DEPENDENCY_JAR
+              MavenReference:
+                GroupId: org.apache.flink
+                ArtifactId: flink-connector-kafka_2.12
+                Version: 1.13.2
