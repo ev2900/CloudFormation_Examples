@@ -43,7 +43,7 @@ Resources:
           Action: 'es:*'
           Resource: '*'
   # -----------------
-  # OpenSearch domain
+  # Cloud9
   # -----------------
   Cloud9:
     Type: AWS::Cloud9::EnvironmentEC2
