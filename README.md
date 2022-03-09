@@ -2,6 +2,8 @@
 
 Repository of CloudFormation examples. There are too many example to write up each. For the more complex CloudFormation examples that deploy multiple services a diagram of the services they deloy is provided below.
 
+---
+
 - [OpenSearch Demo/OpenSearch_demo.yaml](https://github.com/ev2900/CloudFormation_Examples/blob/main/OpenSearch%20Demo/OpenSearch_demo.yaml) 
 
 [![Launch CloudFormation Stack](https://sharkech-public.s3.amazonaws.com/misc-public/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=open-search-demo&templateURL=https://sharkech-public.s3.amazonaws.com/misc-public/OpenSearch_demo.yaml)
