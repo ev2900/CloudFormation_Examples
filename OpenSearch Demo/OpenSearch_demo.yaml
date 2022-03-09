@@ -102,7 +102,7 @@ Resources:
   Firehose: 
       Type: AWS::KinesisFirehose::DeliveryStream
       Properties:
-         DeliveryStreamName: workshop-kfh
+         DeliveryStreamName: workshop-firehose
          DeliveryStreamType: 'DirectPut'
          AmazonopensearchserviceDestinationConfiguration:
             BufferingHints:
