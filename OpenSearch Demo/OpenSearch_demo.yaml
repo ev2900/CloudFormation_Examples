@@ -110,8 +110,7 @@ Resources:
                SizeInMBs: 1
             DomainARN: !GetAtt OpenSearchDomain.Arn
             IndexName: 'workshop'
-            IndexRotationPeriod: 'OneDay'
-            RetryOptions: 300        
+            IndexRotationPeriod: 'OneDay'       
             RoleARN: !GetAtt IAMRole.Arn
             S3BackupMode: 'FailedDocumentsOnly'
             S3Configuration:

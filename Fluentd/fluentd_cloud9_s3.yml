@@ -1,0 +1,16 @@
+Description: Fluentd Cloud9 development enviorment
+Resources:
+  Cloud9:
+    Type: AWS::Cloud9::EnvironmentEC2
+    Properties:
+      Name: 'fluentd-cloud9'
+      Description: 'Fluentd development enviorment'
+      ImageId: 'ubuntu-18.04-x86_64'
+      InstanceType: 'm5.large'
+      AutomaticStopTimeMinutes: '20160'
+      Repositories: [
+        {
+          "PathComponent" : '/fluentd',
+          "RepositoryUrl" : 'https://github.com/fluent/fluentd.git'
+        }
+      ]
