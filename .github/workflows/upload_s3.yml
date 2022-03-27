@@ -45,3 +45,6 @@ jobs:
         
       - name: Upload KDA_studio_kinesis_demo.yaml to S3
         run: aws s3 cp /home/runner/work/CloudFormation_Examples/CloudFormation_Examples/KDA\ Studio\ Demo/KDA_studio_kinesis_demo.yaml s3://sharkech-public/misc-public/KDA_studio_kinesis_demo.yaml
+        
+      - name: Upload fluentd_cloud9.yml to S3
+        run: aws s3 cp /home/runner/work/CloudFormation_Examples/CloudFormation_Examples/Fluentd/fluentd_cloud9.yml s3://sharkech-public/misc-public/fluentd_cloud9.yml
