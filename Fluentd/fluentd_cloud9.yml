@@ -1,6 +1,9 @@
 Description: Fluentd Cloud9 development enviorment
 Resources:
+
+  # -----------------
   # Cloud9 workspace
+  # -----------------
   Cloud9:
     Type: AWS::Cloud9::EnvironmentEC2
     Properties:
@@ -15,34 +18,41 @@ Resources:
           "RepositoryUrl" : 'https://github.com/ev2900/Fluentd_Examples'
         }
       ]
-  
+  # -----------------
   # S3 bucket
+  # -----------------
   S3Bucket:
     Type: AWS::S3::Bucket
   
-  #IAM role
-  FluentdIAMRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: 'Fluentd_Service_Role'
-      Description: 'IAM role for Fluentd to send data to S3'
-      # Trust relationships
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-              - s3.amazonaws.com
-            Action:
-              - 'sts:AssumeRole'
-      # Premissions
+  # -----------------
+  #IAM User
+  # -----------------
+  FluentdIAMUser:
+    Type: AWS::IAM::User
+    Properties: 
+      UserName: 'Fluentd_User'
       Policies:
-        # S3
-        - PolicyName: s3
+        - PolicyName: 'Fluentd_S3'
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action: 's3:*'
                 Resource: '*'
+
+  # Attach an access key to the IAM user
+  FluentdIAMUserAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref FluentdIAMUser
+
+Outputs:
+  S3BucketName:
+    Description: 'S3 bucket name'
+    Value: !Ref S3Bucket
+  AccessKeyId:
+    Description: 'AccessKeyId for IAM user Fluentd_User'
+    Value: !Ref FluentdIAMUserAccessKey
+  SecretAccessKey:
+    Description: 'SecretAccessKey for IAM user Fluentd_User'
+    Value: !GetAtt FluentdIAMUserAccessKey.SecretAccessKey
