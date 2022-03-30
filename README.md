@@ -36,11 +36,19 @@ Repository of CloudFormation examples. There are too many example to write up ea
 
 ---
 
-- [KDA Studio Demo/KDA_studio_kinesis_demo.yaml ](https://github.com/ev2900/CloudFormation_Examples/blob/main/KDA%20Studio%20Demo/KDA_studio_kinesis_demo.yaml)
+- [KDA Studio Demo/KDA_studio_kinesis_demo.yaml](https://github.com/ev2900/CloudFormation_Examples/blob/main/KDA%20Studio%20Demo/KDA_studio_kinesis_demo.yaml)
 
 [![Launch CloudFormation Stack](https://sharkech-public.s3.amazonaws.com/misc-public/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=KDA_studio_kinesis_demo&templateURL=https://sharkech-public.s3.amazonaws.com/misc-public/KDA_studio_kinesis_demo.yaml)
 
 <img width="500" alt="KDA_studio_kinesis_demo_yaml" src="https://github.com/ev2900/CloudFormation_Examples/blob/main/Architecture%20Diagrams%20for%20README/KDA_studio_kinesis_demo_yaml.png">
+
+---
+
+- [Fluentd/fluentd_cloud9.yml](https://github.com/ev2900/CloudFormation_Examples/blob/main/KDA%20Studio%20Demo/KDA_studio_kinesis_demo.yaml)
+
+[![Launch CloudFormation Stack](https://sharkech-public.s3.amazonaws.com/misc-public/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=fluentd_demo&templateURL=https://sharkech-public.s3.amazonaws.com/misc-public/fluentd_cloud9.yml)
+
+<img width="500" alt="Fluentd_cloud9_Architecture" src="https://github.com/ev2900/CloudFormation_Examples/blob/main/Architecture%20Diagrams%20for%20README/Fluentd_Cloud9_yml.png">
 
 ## Future Improvements Planned for this Repository
 
