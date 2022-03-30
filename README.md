@@ -50,6 +50,9 @@ Repository of CloudFormation examples. There are too many example to write up ea
 
 <img width="500" alt="Fluentd_cloud9_Architecture" src="https://github.com/ev2900/CloudFormation_Examples/blob/main/Architecture%20Diagrams%20for%20README/Fluentd_Cloud9_yml.png">
 
+For more information on this architecture please reference the repository [Fluentd_Examples/Cloud9_Apache_Logs_S3/](https://github.com/ev2900/Fluentd_Examples/tree/main/Cloud9_Apache_Logs_S3) for more details
+
+
 ## Future Improvements Planned for this Repository
 
 1. Log ingestion via. Fluentd to S3
