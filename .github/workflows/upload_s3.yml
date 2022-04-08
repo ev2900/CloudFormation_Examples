@@ -48,3 +48,6 @@ jobs:
         
       - name: Upload fluentd_cloud9.yml to S3
         run: aws s3 cp /home/runner/work/CloudFormation_Examples/CloudFormation_Examples/Fluentd/fluentd_cloud9.yml s3://sharkech-public/misc-public/fluentd_cloud9.yml
+        
+      - name: Upload OpenSearch_demo_anomaly_detection.yaml to S3
+        run: aws s3 cp /home/runner/work/CloudFormation_Examples/CloudFormation_Examples/OpenSearch\ Demo/OpenSearch_demo_anomaly_detection.yaml s3://sharkech-public/misc-public/OpenSearch_demo_anomaly_detection.yaml
