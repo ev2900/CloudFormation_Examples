@@ -56,7 +56,7 @@ For more information on this architecture please reference the repository [Fluen
 
 - [OpenSearch Demo/OpenSearch_demo_anomaly_detection.yaml](https://github.com/ev2900/CloudFormation_Examples/blob/main/OpenSearch%20Demo/OpenSearch_demo_anomaly_detection.yaml)
 
-[![Launch CloudFormation Stack](https://sharkech-public.s3.amazonaws.com/misc-public/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=os_anomaly_detection&templateURL=https://sharkech-public.s3.amazonaws.com/misc-public/OpenSearch_demo_anomaly_detection.yaml)
+[![Launch CloudFormation Stack](https://sharkech-public.s3.amazonaws.com/misc-public/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=os-anomaly-detection&templateURL=https://sharkech-public.s3.amazonaws.com/misc-public/OpenSearch_demo_anomaly_detection.yaml)
 
 <img width="450" alt="OpenSearch_demo_anomaly_detection_Architecture" src="https://github.com/ev2900/CloudFormation_Examples/blob/main/Architecture%20Diagrams%20for%20README/OpenSearch_demo_anomaly_detection_yml.png">
 
