@@ -1,0 +1,153 @@
+Description: This template will an MSK 2 AZ MSK Cluster + all network dependencies (VPC, Subnets ...)
+
+Resources:
+  
+  # -----------------
+  # VPC
+  # ----------------- 
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: '10.0.0.0/16'
+      Tags:
+        - Key: Name
+          Value: msk-vpc
+
+  # -----------------
+  # Internet Gateway
+  # -----------------
+  VPCInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: msk-internet-gateway
+  # Attach InternetGateway to VPC
+  AttachInternetGatewayVPC:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      InternetGatewayId: 
+        Ref: VPCInternetGateway
+      VpcId:
+        Ref: VPC
+
+  # -----------------
+  # Subnets
+  # ----------------- 
+
+  #
+  # Subnet 1
+  #
+  Subnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: '10.0.0.0/28'
+      AvailabilityZone: 'us-east-1a'
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: msk-subnet-1 | us-east-1a
+
+  #
+  # Subnet 2
+  #
+  Subnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: '10.0.1.0/28'
+      AvailabilityZone: 'us-east-1b'
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: msk-subnet-2 | us-east-1b
+
+  # -----------------
+  # Network Security Groups
+  # -----------------
+  
+  #
+  # MSK Security Group
+  #   
+  MSKSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: 'msk security group'
+      GroupDescription: 'msk security group'
+      VpcId: !Ref VPC
+      # Egress rules
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: -1 
+          ToPort: -1
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: Name
+          Value: 'msk security group'
+  # add a self reference ingress rule 
+  MSKSecurityGroupIngress1:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      # Ingress rules
+      GroupId: !Ref MSKSecurityGroup
+      IpProtocol: -1
+      FromPort: -1
+      ToPort: -1
+      SourceSecurityGroupId: !GetAtt MSKSecurityGroup.GroupId
+
+  # -----------------
+  # Route Table
+  # -----------------
+  VPCRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties: 
+      Tags: 
+        - Key: Name
+          Value: msk-route-table
+      VpcId: !Ref VPC
+  # add a route to the internet gateway
+  InternetGatewayRoute:
+    Type: AWS::EC2::Route
+    Properties: 
+      RouteTableId: !Ref VPCRouteTable
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref VPCInternetGateway
+
+  # associate route table with subnets (Subnet1, Subnet2)
+  Subnet1Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId: !Ref VPCRouteTable
+      SubnetId: !Ref Subnet1
+
+  Subnet2Association:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref VPCRouteTable
+      SubnetId: !Ref Subnet2
+
+  # -----------------
+  # MSK
+  # -----------------
+  MSKCluster:
+    Type: AWS::MSK::Cluster
+    Properties:
+      ClusterName: 'msk-workshop-cluster'
+      KafkaVersion: 2.6.2
+      NumberOfBrokerNodes: 2
+      BrokerNodeGroupInfo:
+        InstanceType: kafka.m5.large
+        ClientSubnets: 
+          - !Ref Subnet1
+          - !Ref Subnet2
+        SecurityGroups:
+          - !GetAtt MSKSecurityGroup.GroupId
+        StorageInfo: 
+          EBSStorageInfo: 
+            VolumeSize: 100
+      ClientAuthentication: 
+        Unauthenticated: 
+          Enabled: True
+      EncryptionInfo:
+        EncryptionInTransit: 
+          ClientBroker: PLAINTEXT
+          InCluster: False
