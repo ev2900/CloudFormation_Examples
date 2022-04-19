@@ -15,7 +15,7 @@ Resources:
       Repositories: [
         {
           "PathComponent" : '/Fluentd_Examples',
-          "RepositoryUrl" : 'https://github.com/ev2900/Fluentd_Examples'
+          "RepositoryUrl" : 'https://github.com/ev2900/Fluentd_Examples.git'
         }
       ]
   # -----------------
