@@ -91,4 +91,7 @@ Outputs:
     Value: 'OSMasterUser'
   Password:
     Description: 'OpenSearch Dashboard Login Password'
-    Value: 'AwS#OpenSearch1'   
+    Value: 'AwS#OpenSearch1'
+  OSDomainURL:
+    Description: 'OpenSearch domain endpoint URL'
+    Value: !GetAtt OpenSearchDomain.DomainEndpoint
