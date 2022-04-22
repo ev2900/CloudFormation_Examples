@@ -1,0 +1,49 @@
+Description: Fluentd Cloud9 development enviorment
+Resources:
+
+  # -----------------
+  # Cloud9 workspace
+  # -----------------
+  Cloud9:
+    Type: AWS::Cloud9::EnvironmentEC2
+    Properties:
+      Name: 'fluentd-cloud9-opensearch'
+      Description: 'Fluentd development enviorment'
+      ImageId: 'ubuntu-18.04-x86_64'
+      InstanceType: 'm5.large'
+      AutomaticStopTimeMinutes: '20160'
+      Repositories: [
+        {
+          "PathComponent" : '/Fluentd_Examples',
+          "RepositoryUrl" : 'https://github.com/ev2900/Fluentd_Examples.git'
+        }
+      ]
+  
+  # -----------------
+  #IAM User
+  # -----------------
+  FluentdIAMUser:
+    Type: AWS::IAM::User
+    Properties: 
+      UserName: 'Fluentd_User_OpenSearch'
+
+  # Attach an access key to the IAM user
+  FluentdIAMUserAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref FluentdIAMUser
+
+  # -----------------
+  # OpenSearch domain - TO DO
+  # -----------------
+
+Outputs:
+  AccessKeyId:
+    Description: 'AccessKeyId for IAM user Fluentd_User'
+    Value: !Ref FluentdIAMUserAccessKey
+  SecretAccessKey:
+    Description: 'SecretAccessKey for IAM user Fluentd_User'
+    Value: !GetAtt FluentdIAMUserAccessKey.SecretAccessKey
+  Region:
+    Description: 'AWS region'
+    Value: !Ref AWS::Region
