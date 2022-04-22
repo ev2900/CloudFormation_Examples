@@ -83,6 +83,9 @@ Outputs:
   SecretAccessKey:
     Description: 'SecretAccessKey for IAM user Fluentd_User'
     Value: !GetAtt FluentdIAMUserAccessKey.SecretAccessKey
+  IAMUserARN:
+    Description: 'SecretAccessKey for IAM user Fluentd_User'
+    Value: !GetAtt FluentdIAMUser.Arn
   Region:
     Description: 'AWS region'
     Value: !Ref AWS::Region
@@ -94,4 +97,4 @@ Outputs:
     Value: 'AwS#OpenSearch1'
   OSDomainURL:
     Description: 'OpenSearch domain endpoint URL'
-    Value: !GetAtt OpenSearchDomain.DomainEndpoint
+    Value: !Join [ "", [ "https://", !GetAtt OpenSearchDomain.DomainEndpoint] ] 
