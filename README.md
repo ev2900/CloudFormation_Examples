@@ -44,7 +44,7 @@ Repository of CloudFormation examples. There are too many example to write up ea
 
 ---
 
-- Located in a different repository [Kafka_OpenSearch_Anomaly_Detection/CloudFormation/msk_lambda_opensearch.yaml](https://github.com/ev2900/Kafka_OpenSearch_Anomaly_Detection/blob/main/CloudFormation/msk_lambda_opensearch.yaml)
+- YAML Located in a different repository [Kafka_OpenSearch_Anomaly_Detection/CloudFormation/msk_lambda_opensearch.yaml](https://github.com/ev2900/Kafka_OpenSearch_Anomaly_Detection/blob/main/CloudFormation/msk_lambda_opensearch.yaml)
 
 [![Launch CloudFormation Stack](https://sharkech-public.s3.amazonaws.com/misc-public/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=msk-lambda-opensearch&templateURL=https://sharkech-public.s3.amazonaws.com/misc-public/msk_lambda_opensearch.yaml)
 
