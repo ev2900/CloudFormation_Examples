@@ -54,3 +54,6 @@ jobs:
       
       - name: Upload fluentd_cloud9_opensearch.yml to S3
         run: aws s3 cp /home/runner/work/CloudFormation_Examples/CloudFormation_Examples/Fluentd/fluentd_cloud9_opensearch.yml s3://sharkech-public/misc-public/fluentd_cloud9_opensearch.yml
+        
+      - name: Upload OpenSearch_demo_alerting.yaml to S3
+        run: aws s3 cp /home/runner/work/CloudFormation_Examples/CloudFormation_Examples/OpenSearch\ Demo/OpenSearch_demo_alerting.yaml s3://sharkech-public/misc-public/OpenSearch_demo_alerting.yaml
