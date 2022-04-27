@@ -54,6 +54,16 @@ For more information / post CloudFormation deployment steps please referece the 
 
 ---
 
+* [OpenSearch Demo/OpenSearch_demo_alerting.yaml](https://github.com/ev2900/CloudFormation_Examples/blob/main/OpenSearch%20Demo/OpenSearch_demo_alerting.yaml)
+
+[![Launch CloudFormation Stack](https://sharkech-public.s3.amazonaws.com/misc-public/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=os-alerting&templateURL=https://sharkech-public.s3.amazonaws.com/misc-public/OpenSearch_demo_alerting.yaml)
+
+<img width="600" alt="Fluentd_cloud9_Architecture" src="https://github.com/ev2900/CloudFormation_Examples/blob/main/Architecture%20Diagrams%20for%20README/OpenSearch_demo_alerting_yaml.png">
+
+For more information / post CloudFormation deployment steps please referece the repository [OpenSearch_API_Examples/Alerting/](https://github.com/ev2900/OpenSearch_API_Examples/blob/main/Alerting/README.md)
+
+---
+
 - [Fluentd/fluentd_cloud9_opensearch.yml](https://github.com/ev2900/CloudFormation_Examples/blob/main/Fluentd/fluentd_cloud9_opensearch.yml)
 
 [![Launch CloudFormation Stack](https://sharkech-public.s3.amazonaws.com/misc-public/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=fluentd-demo-opensearch&templateURL=https://sharkech-public.s3.amazonaws.com/misc-public/fluentd_cloud9_opensearch.yml)
