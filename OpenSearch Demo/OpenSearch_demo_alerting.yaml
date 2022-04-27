@@ -106,7 +106,7 @@ Outputs:
   DashboardURL:
       Description: 'OpenSearch dashboard URL'
       Value: !Join [ "", [ "https://", !GetAtt OpenSearchDomain.DomainEndpoint, "/_dashboards"] ]
-    Description:
+  Description:
     Value: 
   TopicARN:
     Description: 'SNS Topic ARN'
