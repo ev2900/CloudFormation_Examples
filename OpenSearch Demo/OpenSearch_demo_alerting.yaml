@@ -98,6 +98,24 @@ Resources:
             AWS: '*'
           Action: 'es:*'
           Resource: '*'
+
+  # -----------------
+  # Cloud9
+  # -----------------
+  Cloud9:
+    Type: AWS::Cloud9::EnvironmentEC2
+    Properties:
+      Name: 'workshop-cloud9'
+      Description: 'Cloud9 development enviorment'
+      ImageId: 'amazonlinux-2-x86_64'
+      InstanceType: 't2.micro'
+      AutomaticStopTimeMinutes: '30'
+      Repositories: [
+        {
+          "PathComponent" : '/OpenSearch_API_Examples',
+          "RepositoryUrl" : 'https://github.com/ev2900/OpenSearch_API_Examples.git'
+        }
+      ]
        
 Outputs: 
   OSDomainURL:
