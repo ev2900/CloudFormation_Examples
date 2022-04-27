@@ -1,12 +1,66 @@
-Description: This template will an OpenSearch Demo within a VPC with Subnets, Security Groups ...
+Description: This template will an OpenSearch Demo with SNSTopic and other parts required for alerting
 
+Parameters:
+  EmailParameter:
+    Type: String
+    Description: Email to send alerts to
+    
 Resources:
-  
   # -----------------
   # SNS Topic
   # ----------------- 
-  Type: AWS::SNS::Topic
+  SNSTopic:
+    Type: AWS::SNS::Topic
     Properties: 
       DisplayName: 'os-alert-topic'
       FifoTopic: False
       TopicName: 'os-alert-topic'
+
+  # -----------------
+  # SNS Subscription
+  # -----------------
+  SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref SNSTopic
+      Protocol: 'email'
+      Endpoint:
+        Ref: EmailParameter
+
+  # -----------------
+  # IAM Role
+  # -----------------
+  SNSOSIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 'SNS_OpenSearch_Role'
+      Description: 'IAM role for SNS OpenSearch Alerting'
+      # Trust relationships
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - opensearch.amazonaws.com
+                - es.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      # Premissions
+      Policies:
+        # SNS premissions
+        - PolicyName: sns
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'sns:*'
+                Resource: '*'
+       
+Outputs: 
+  TopicARN:
+    Description: 'SNS Topic ARN'
+    Value: !Ref SNSTopic
+  IAMRoleARN:
+    Description: 'IAM Role ARN'
+    Value: !GetAtt SNSOSIAMRole.Arn
