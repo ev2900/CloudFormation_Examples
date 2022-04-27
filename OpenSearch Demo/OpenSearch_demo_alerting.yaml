@@ -1,0 +1,12 @@
+Description: This template will an OpenSearch Demo within a VPC with Subnets, Security Groups ...
+
+Resources:
+  
+  # -----------------
+  # SNS Topic
+  # ----------------- 
+  Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: 'os-alert-topic'
+      FifoTopic: False
+      TopicName: 'os-alert-topic'
