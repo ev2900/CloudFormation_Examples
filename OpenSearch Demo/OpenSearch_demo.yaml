@@ -129,7 +129,7 @@ Resources:
       Name: 'workshop-cloud9'
       Description: 'Cloud9 development enviorment'
       ImageId: 'amazonlinux-2-x86_64'
-      InstanceType: 't3.small'
+      InstanceType: 'm5.large'
       AutomaticStopTimeMinutes: '30'
                
 Outputs:
