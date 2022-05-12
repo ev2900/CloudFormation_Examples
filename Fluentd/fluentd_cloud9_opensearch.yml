@@ -10,12 +10,16 @@ Resources:
       Name: 'fluentd-cloud9-opensearch'
       Description: 'Fluentd development enviorment'
       ImageId: 'ubuntu-18.04-x86_64'
-      InstanceType: 'm5.large'
+      InstanceType: 't2.large'
       AutomaticStopTimeMinutes: '20160'
       Repositories: [
         {
           "PathComponent" : '/Fluentd_Examples',
           "RepositoryUrl" : 'https://github.com/ev2900/Fluentd_Examples.git'
+        },
+        {
+          "PathComponent" : '/OpenSearch_API_Examples',
+          "RepositoryUrl" : 'https://github.com/ev2900/OpenSearch_API_Examples.git'
         }
       ]
   
