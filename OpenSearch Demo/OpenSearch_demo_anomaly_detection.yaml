@@ -14,6 +14,10 @@ Resources:
         InstanceCount: '1'
         ZoneAwarenessEnabled: false
         InstanceType: 'r6gd.16xlarge.search'
+      EBSOptions:
+        EBSEnabled: true
+        VolumeSize: '20'
+        VolumeType: 'gp2'
       # Node to node encrpytion must be enabled to use the advanced security options
       NodeToNodeEncryptionOptions:
         Enabled: true
