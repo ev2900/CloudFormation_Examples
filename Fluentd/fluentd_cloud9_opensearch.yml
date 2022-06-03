@@ -16,10 +16,6 @@ Resources:
         {
           "PathComponent" : '/Fluentd_Examples',
           "RepositoryUrl" : 'https://github.com/ev2900/Fluentd_Examples.git'
-        },
-        {
-          "PathComponent" : '/OpenSearch_API_Examples',
-          "RepositoryUrl" : 'https://github.com/ev2900/OpenSearch_API_Examples.git'
         }
       ]
   
