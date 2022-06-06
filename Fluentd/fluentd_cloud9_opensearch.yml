@@ -85,7 +85,7 @@ Outputs:
     Description: 'SecretAccessKey for IAM user Fluentd_User'
     Value: !GetAtt FluentdIAMUserAccessKey.SecretAccessKey
   IAMUserARN:
-    Description: 'SecretAccessKey for IAM user Fluentd_User'
+    Description: 'ARN of the IAM user Fluentd_User'
     Value: !GetAtt FluentdIAMUser.Arn
   Region:
     Description: 'AWS region'
