@@ -7,7 +7,7 @@ Resources:
     Type: AWS::OpenSearchService::Domain
     Properties:
       DomainName: workshop-domain-leader
-      EngineVersion: 'OpenSearch_1.2'
+      EngineVersion: 'OpenSearch_1.3'
       # Development configuration
       ClusterConfig:
         DedicatedMasterEnabled: false
@@ -51,7 +51,7 @@ Resources:
     Type: AWS::OpenSearchService::Domain
     Properties:
       DomainName: workshop-domain-follower
-      EngineVersion: 'OpenSearch_1.2'
+      EngineVersion: 'OpenSearch_1.3'
       # Development configuration
       ClusterConfig:
         DedicatedMasterEnabled: false
