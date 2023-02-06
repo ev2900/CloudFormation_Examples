@@ -4,7 +4,7 @@ Resources:
     Type: AWS::OpenSearchService::Domain
     Properties:
       DomainName: workshop-domain
-      EngineVersion: 'OpenSearch_1.3'
+      EngineVersion: 'OpenSearch_2.3'
       # Development configuration
       ClusterConfig:
         DedicatedMasterEnabled: false
@@ -13,7 +13,7 @@ Resources:
         InstanceType: 'r6g.large.search'
       EBSOptions:
         EBSEnabled: true
-        VolumeSize: '20'
+        VolumeSize: '250'
         VolumeType: 'gp2'
       # Node to node encrpytion must be enabled to use the advanced security options
       NodeToNodeEncryptionOptions:
